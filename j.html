@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="robots" content="noindex">
+<meta name="referrer" content="no-referrer">
+<title>Oyundaş · Davet</title>
+<meta property="og:title" content="Oyundaş · Davet">
+<meta property="og:description" content="Birlikte oynamak için davet edildin. · You're invited to play together.">
+<meta property="og:image" content="https://oyundas.github.io/legal/icon.png">
+<link rel="icon" href="icon.png">
+<link rel="apple-touch-icon" href="icon.png">
+<style>
+:root{--ink:#1C2140;--paper:#F7F3EE;--card:#FFFFFF;--muted:#6B6F80;--coral:#E8624A;--line:#E6E0D8}
+@media(prefers-color-scheme:dark){:root{--ink:#EDE9E3;--paper:#12141F;--card:#1B1E2C;--muted:#9A9DAD;--line:#2A2E40}}
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px 16px calc(24px + env(safe-area-inset-bottom));
+font:16px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;color:var(--ink);background:var(--paper)}
+main{width:100%;max-width:420px;text-align:center}
+.icon{width:88px;height:88px;border-radius:20px;box-shadow:0 6px 24px rgba(28,33,64,.18)}
+h1{font-size:24px;line-height:1.25;margin:20px 0 6px}
+.sub{color:var(--muted);margin:0 0 22px}
+.code{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:18px 12px;margin-bottom:18px}
+.code small{display:block;color:var(--muted);font-size:13px;margin-bottom:6px}
+.code b{font:600 28px/1.2 ui-monospace,SFMono-Regular,Menlo,monospace;letter-spacing:2px;word-break:break-all}
+.btn{display:block;width:100%;padding:15px 16px;border-radius:14px;font-size:17px;font-weight:600;text-decoration:none;border:0;cursor:pointer;margin-top:10px}
+.primary{background:var(--ink);color:var(--paper)}
+.secondary{background:transparent;color:var(--ink);border:1.5px solid var(--ink)}
+.ghost{background:transparent;color:var(--coral)}
+.hint{color:var(--muted);font-size:14px;margin-top:18px}
+.note{color:var(--muted);font-size:12px;margin-top:24px}
+[hidden]{display:none!important}
+</style>
+</head>
+<body>
+<main>
+  <img class="icon" src="icon.png" alt="" width="88" height="88">
+  <h1 id="title"></h1>
+  <p class="sub" id="sub"></p>
+  <div class="code" id="codeBox" hidden><small id="codeLabel"></small><b id="code"></b></div>
+  <a class="btn primary" id="open" href="#" hidden></a>
+  <a class="btn secondary" id="store" href="https://apps.apple.com/app/id6823974379"></a>
+  <button class="btn ghost" id="copy" type="button" hidden></button>
+  <p class="hint" id="hint"></p>
+  <p class="note" id="note"></p>
+</main>
+<script>
+(function () {
+  "use strict";
+  var T = {
+    tr: {app:"Oyundaş", title:"Oyundaş'a davet edildin", sub:"Sevdiklerinle aynı anda, herkes kendi telefonundan oynasın.", label:"Davet kodun", open:"Uygulamada aç", store:"App Store'dan indir", copy:"Kodu kopyala", copied:"Kopyalandı ✓", hint:"Uygulama yüklü değilse önce indir, sonra \"Kod ile Katıl\" ekranına bu kodu yapıştır.", none:"Bu bağlantıda geçerli bir davet kodu yok. Davet edenden kodu yeniden iste.", note:"Kod yalnızca bu sayfada, kendi cihazında okunur; hiçbir sunucuya gönderilmez."},
+    en: {app:"Playfellow", title:"You're invited to Playfellow", sub:"Play together, everyone on their own phone, at the same time.", label:"Your invite code", open:"Open in the app", store:"Download on the App Store", copy:"Copy code", copied:"Copied ✓", hint:"If you don't have the app yet, download it first, then paste this code on the \"Join with Code\" screen.", none:"This link has no valid invite code. Ask the person who invited you for the code again.", note:"The code is read only on this page, on your device; it is never sent to a server."},
+    de: {app:"Spielfreund", title:"Du bist zu Spielfreund eingeladen", sub:"Gemeinsam spielen – alle gleichzeitig, jeder am eigenen Handy.", label:"Dein Einladungscode", open:"In der App öffnen", store:"Im App Store laden", copy:"Code kopieren", copied:"Kopiert ✓", hint:"Hast du die App noch nicht, lade sie zuerst und füge den Code dann bei „Mit Code beitreten“ ein.", none:"Dieser Link enthält keinen gültigen Einladungscode. Bitte frag erneut nach dem Code.", note:"Der Code wird nur auf dieser Seite auf deinem Gerät gelesen und nie an einen Server gesendet."},
+    es: {app:"Jugamigos", title:"Te han invitado a Jugamigos", sub:"Jugad juntos, cada uno desde su móvil y a la vez.", label:"Tu código de invitación", open:"Abrir en la app", store:"Descargar en el App Store", copy:"Copiar código", copied:"Copiado ✓", hint:"Si aún no tienes la app, descárgala y pega este código en la pantalla «Unirse con código».", none:"Este enlace no tiene un código de invitación válido. Pide el código de nuevo.", note:"El código solo se lee en esta página, en tu dispositivo; nunca se envía a un servidor."},
+    fr: {app:"Jouamis", title:"Tu es invité·e sur Jouamis", sub:"Jouez ensemble, chacun sur son téléphone, en même temps.", label:"Ton code d'invitation", open:"Ouvrir dans l'app", store:"Télécharger sur l'App Store", copy:"Copier le code", copied:"Copié ✓", hint:"Si tu n'as pas encore l'app, télécharge-la puis colle ce code dans l'écran « Rejoindre avec un code ».", none:"Ce lien ne contient pas de code d'invitation valide. Redemande le code.", note:"Le code n'est lu que sur cette page, sur ton appareil ; il n'est jamais envoyé à un serveur."},
+    ar: {app:"رفيق اللعب", title:"تمت دعوتك إلى رفيق اللعب", sub:"العبوا معًا في الوقت نفسه، كلٌّ من هاتفه.", label:"رمز الدعوة", open:"افتح في التطبيق", store:"نزّل من App Store", copy:"انسخ الرمز", copied:"تم النسخ ✓", hint:"إن لم يكن التطبيق مثبتًا، نزّله أولًا ثم الصق هذا الرمز في شاشة «الانضمام برمز».", none:"لا يحتوي هذا الرابط على رمز دعوة صالح. اطلب الرمز من جديد.", note:"يُقرأ الرمز في هذه الصفحة على جهازك فقط، ولا يُرسل إلى أي خادم."},
+    ru: {app:"Напарник", title:"Вас пригласили в «Напарник»", sub:"Играйте вместе — одновременно, каждый со своего телефона.", label:"Ваш код приглашения", open:"Открыть в приложении", store:"Загрузить в App Store", copy:"Скопировать код", copied:"Скопировано ✓", hint:"Если приложения ещё нет, скачайте его и вставьте код на экране «Присоединиться по коду».", none:"В этой ссылке нет действительного кода. Попросите код ещё раз.", note:"Код читается только на этой странице на вашем устройстве и никогда не отправляется на сервер."},
+    az: {app:"Oyundaş", title:"Oyundaş-a dəvət olunmusan", sub:"Sevdiklərinlə eyni anda, hər kəs öz telefonundan oynasın.", label:"Dəvət kodun", open:"Tətbiqdə aç", store:"App Store-dan yüklə", copy:"Kodu kopyala", copied:"Kopyalandı ✓", hint:"Tətbiq yüklü deyilsə, əvvəlcə yüklə, sonra bu kodu \"Kodla qoşul\" ekranına yapışdır.", none:"Bu keçiddə etibarlı dəvət kodu yoxdur. Kodu yenidən istə.", note:"Kod yalnız bu səhifədə, öz cihazında oxunur; heç bir serverə göndərilmir."},
+    ja: {app:"遊び仲間", title:"遊び仲間に招待されました", sub:"それぞれのスマホから、みんなで同時に遊べます。", label:"招待コード", open:"アプリで開く", store:"App Storeでダウンロード", copy:"コードをコピー", copied:"コピーしました ✓", hint:"アプリをお持ちでない場合は、ダウンロード後に「コードで参加」画面にこのコードを貼り付けてください。", none:"このリンクには有効な招待コードがありません。もう一度コードを聞いてください。", note:"コードはこのページ上、あなたの端末内でのみ読み取られ、サーバーには送信されません。"},
+    zh: {app:"玩伴", title:"你被邀请加入玩伴", sub:"每个人用自己的手机，同时一起玩。", label:"你的邀请码", open:"在应用中打开", store:"在 App Store 下载", copy:"复制邀请码", copied:"已复制 ✓", hint:"如果还没有安装应用，请先下载，然后在“用邀请码加入”页面粘贴此邀请码。", none:"此链接中没有有效的邀请码。请重新向邀请人索取。", note:"邀请码只在此页面、在你的设备上读取，绝不会发送到服务器。"}
+  };
+  var langs = (navigator.languages && navigator.languages.length ? navigator.languages : [navigator.language || "tr"]);
+  var key = "en";
+  for (var i = 0; i < langs.length; i++) {
+    var l = String(langs[i]).toLowerCase().split("-")[0];
+    if (T[l]) { key = l; break; }
+  }
+  var t = T[key];
+  document.documentElement.lang = key;
+  if (key === "ar") document.documentElement.dir = "rtl";
+  document.title = t.app + " · " + t.label;
+
+  function set(id, text) { document.getElementById(id).textContent = text; }
+  set("title", t.title); set("sub", t.sub); set("codeLabel", t.label);
+  set("open", t.open); set("store", t.store); set("copy", t.copy); set("note", t.note);
+
+  // Kod yalnızca "#" sonrasından okunur (sunucuya gitmez) ve yalnızca izin verilen karakterlerle kabul edilir.
+  var raw = decodeURIComponent((location.hash || "").replace(/^#/, "")).toUpperCase();
+  var clean = raw.replace(/[^A-Z0-9]/g, "");
+  var valid = clean.length >= 8 && clean.length <= 16 && raw.length <= 40;
+
+  if (!valid) { set("hint", t.none); return; }
+
+  var display = raw.replace(/[^A-Z0-9-]/g, "");
+  set("code", display);
+  set("hint", t.hint);
+  document.getElementById("codeBox").hidden = false;
+
+  var open = document.getElementById("open");
+  open.href = "oyundas://join#" + encodeURIComponent(clean);
+  open.hidden = false;
+
+  var copy = document.getElementById("copy");
+  copy.hidden = false;
+  copy.addEventListener("click", function () {
+    var done = function () { copy.textContent = t.copied; };
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(display).then(done, function () {});
+    }
+  });
+})();
+</script>
+</body>
+</html>
